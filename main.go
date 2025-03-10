@@ -130,5 +130,5 @@ func main() {
 	r := gin.Default()
 	r.GET("/tauri-releases/box-office-investigation/:platform/:current_version", getUpdaterHandler)
 
-	r.RunTLS(":8080", "server.pem", "server.key")
+	r.Run(":8080")
 }
