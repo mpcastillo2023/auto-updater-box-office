@@ -5,7 +5,6 @@ import (
 	"io"
 	"net/http"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -26,17 +25,17 @@ type Release struct {
 
 var (
 	releaseCache *Release
-	cacheMutex   sync.Mutex
-	cacheExpires time.Time
+	// cacheMutex   sync.Mutex
+	// cacheExpires time.Time
 )
 
 func getLatestGHRelease(platform string) (*Release, error) {
-	cacheMutex.Lock()
-	defer cacheMutex.Unlock()
+	// cacheMutex.Lock()
+	// defer cacheMutex.Unlock()
 
-	if time.Now().Before(cacheExpires) {
-		return releaseCache, nil
-	}
+	// if time.Now().Before(cacheExpires) {
+	// 	return releaseCache, nil
+	// }
 
 	url := "https://api.github.com/repos/" + githubRepo + "/releases/latest"
 	resp, err := http.Get(url)
@@ -103,7 +102,7 @@ func getLatestGHRelease(platform string) (*Release, error) {
 		Url:       updateDownloadUrl,
 		Signature: updateSignature,
 	}
-	cacheExpires = time.Now().Add(cacheDuration)
+	// cacheExpires = time.Now().Add(cacheDuration)
 
 	return releaseCache, nil
 }
