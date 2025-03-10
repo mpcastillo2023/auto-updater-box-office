@@ -127,7 +127,8 @@ func getUpdaterHandler(c *gin.Context) {
 
 func main() {
 	r := gin.Default()
-	r.GET("/tauri-releases/box-office-investigation/:platform/:current_version", getUpdaterHandler)
+
+	r.GET("/:platform/:current_version", getUpdaterHandler)
 
 	r.Run(":8080")
 }
