@@ -79,7 +79,7 @@ func getLatestGHRelease(platform string) (*Release, error) {
 	pubDate := releaseData["published_at"].(string)
 
 	platformsExtensions := map[string]string{
-		"linux-x86_64":   "amd64.AppImage.gz",
+		"linux-x86_64":   "amd64.AppImage",
 		"darwin-x86_64":  "app.tar.gz",
 		"darwin-aarch64": "app.tar.gz",
 		"windows-x86_64": "x64_en-US.msi",
