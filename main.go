@@ -125,10 +125,31 @@ func getUpdaterHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, release)
 }
 
+func getTestHandler(c *gin.Context) {
+	url := "https://api.github.com/repos/" + githubRepo + "/releases/latest"
+	resp, err := http.Get(url)
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+	}
+
+	var releaseData map[string]interface{}
+	if err := json.Unmarshal(body, &releaseData); err != nil {
+		c.Status(http.StatusInternalServerError)
+	}
+
+	c.JSON(http.StatusOK, releaseData)
+}
+
 func main() {
 	r := gin.Default()
-
+	r.GET("/", getTestHandler)
 	r.GET("/:platform/:current_version", getUpdaterHandler)
 
-	r.Run(":8080")
+	r.RunTLS(":8080", "./cert.pem", "./key.pem")
 }
