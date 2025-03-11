@@ -29,6 +29,21 @@ var (
 	// cacheExpires time.Time
 )
 
+func getAuthenticatedRequest(url string) (*http.Response, error) {
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Replace "your-github-token-here" with your actual GitHub token
+	req.Header.Set("Authorization", "Authorization: Bearer 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")
+	req.Header.Set("Accept", "application/vnd.github.v3+json")
+
+	return client.Do(req)
+}
+
 func getLatestGHRelease(platform string) (*Release, error) {
 	// cacheMutex.Lock()
 	// defer cacheMutex.Unlock()
@@ -38,7 +53,7 @@ func getLatestGHRelease(platform string) (*Release, error) {
 	// }
 
 	url := "https://api.github.com/repos/" + githubRepo + "/releases/latest"
-	resp, err := http.Get(url)
+	resp, err := getAuthenticatedRequest(url)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +142,7 @@ func getUpdaterHandler(c *gin.Context) {
 
 func getTestHandler(c *gin.Context) {
 	url := "https://api.github.com/repos/" + githubRepo + "/releases/latest"
-	resp, err := http.Get(url)
+	resp, err := getAuthenticatedRequest(url)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 	}
