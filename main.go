@@ -3,11 +3,14 @@ package main
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 const (
@@ -36,9 +39,8 @@ func getAuthenticatedRequest(url string) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// Replace "your-github-token-here" with your actual GitHub token
-	req.Header.Set("Authorization", "Authorization: Bearer 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")
+	api_Key := os.Getenv("GITHUB_API_KEY")
+	req.Header.Set("Authorization", "Authorization: Bearer "+api_Key)
 	req.Header.Set("Accept", "application/vnd.github.v3+json")
 
 	return client.Do(req)
@@ -162,6 +164,10 @@ func getTestHandler(c *gin.Context) {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	r := gin.Default()
 	r.GET("/", getTestHandler)
 	r.GET("/:platform/:current_version", getUpdaterHandler)
