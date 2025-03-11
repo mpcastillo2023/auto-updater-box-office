@@ -151,5 +151,5 @@ func main() {
 	r.GET("/", getTestHandler)
 	r.GET("/:platform/:current_version", getUpdaterHandler)
 
-	r.RunTLS(":8080", "./cert.pem", "./key.pem")
+	r.Run(":8080")
 }
